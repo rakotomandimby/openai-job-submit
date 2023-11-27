@@ -1,0 +1,11 @@
+# gitignore file
+# Ignore commonly ignored files when developping a Node.js project and using Emacs as editor.
+
+# Node.js
+node_modules
+dist/
+# Emacs
+*~
+\#*\#
+.\#*
+

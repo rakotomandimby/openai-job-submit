@@ -1,0 +1,23 @@
+Pour une mission longue durée, nous recherchons un développeur PHP Symfony
+
+Expertises attendues :
+- Références professionnelles avérées en développement Symfony = 4.4,
+- Références professionnelles en développement PHP 7.4,
+- Références professionnelles d’optimisation / tests de performance,
+- Maitrise des api REST
+- Maitrise des principes SOLID, Design Patterns, POO, DDD.
+- Maitrise des problématiques de tests unitaires / fonctionnels,
+- Bonnes connaissances des outils d’intégration (Git, Jenkins, Docker),
+- Connaissances en microservices / workflow, architecture événementielle.
+- Aisance dans la méthodologie de projet Agile (Scrum / Kanban).
+
+
+Description de l'entreprise
+Kaibee est une société spécialisée sur toutes les problématiques et les compétences liées à des projets de développement applicatifs sur des technologies objets ou Web (Java / Android / Ios / Windows Phone / Ruby / C++ / .Net / Javascript / anguar.Js... ):
+
+Nous intervenons sur des prestations de :
+- Gestion de projet / scrum mastering
+- Expertise technique (audit de code, architecture, refactoring, audit de performances..
+- Architecture logicielle / conception
+- Développement
+- Craftsmanship / tests / recette / intégration continue

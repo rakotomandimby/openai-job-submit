@@ -1,0 +1,5 @@
+En tant que Consultant IT indépendant, j'ai piloté des projets avec des stacks technologiques contemporaines incluant Symfony pour Orange Madagascar. Mes compétences en CI/CD avec Jenkins, ainsi que ma maîtrise de PHP et des principes SOLID, me seront précieuses pour votre mission.
+
+Chez SDWorx Mauritius, ma fonction de Responsable DevOps a consolidé ma maîtrise en automatisation, en optimisation des performances et en architecture événementielle. Développer en .NET Core et gérer les pipelines Azure ont renforcé ma polyvalence technique.
+
+Mon poste d’Architecte IT chez Intelios a impliqué la gestion de la sécurité et des infrastructures via des outils comme VMware, DevOps et Kubernetes. Ces expériences m'ont préparé à adhérer aux méthodologies Agile et à me spécialiser dans l'architecture microservices.
