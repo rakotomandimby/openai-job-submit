@@ -23,11 +23,12 @@ app.use(express.static('public'));
 
 // define the first route
 app.get('/', (req: Request, res: Response) => {
-  res.render('index', {message: "Mimi"});
+  res.render('index2', {message: "Waiting for your question"});
 });
+
 app.post('/', (req: Request, res: Response) => {
-  const company = req.body.company;
-  const job = req.body.job;
+  const company  = req.body.company;
+  const job      = req.body.job;
   const language = req.body.language;
   const position = req.body.position;
   
@@ -35,10 +36,10 @@ app.post('/', (req: Request, res: Response) => {
     .then((result) => {
       // render, but without escaping html that are in message
       res.set('Content-Type', 'text/html');
-      res.render('index', {message: result});
+      res.render('index2', {message: result});
     })
     .catch((error) => {
-      res.render('index', {message: error});
+      res.render('index2', {message: error});
     });
 });
 

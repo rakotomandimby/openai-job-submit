@@ -6,15 +6,7 @@ function nullToEmptyString(str: string | null): string {
   else { return str;}
 }
 
-async function main() {
-  
-}
-
-// function to transform line breaks into <br> tags
-function nl2br (str: string, is_xhtml: boolean) {
-  var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
-  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
-}
+async function main() { }
 
 export  async function getResult(company: string, position: string, job: string, language: string) {
   const openai = new OpenAI({
@@ -51,6 +43,6 @@ export  async function getResult(company: string, position: string, job: string,
   });
   
   console.log(chatCompletion.choices[0].message.content);
-  return nl2br(nullToEmptyString(chatCompletion.choices[0].message.content), false);
+  return nullToEmptyString(chatCompletion.choices[0].message.content)
 }
 
