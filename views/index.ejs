@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <h1>Home</h1>
+    <p><a href="/">Get back Home</a> </p>
+    <hr />
+    <div> <%= message %> </div>
+    <hr />
+    <form action="/" method="post">
+      <label for="company">Company Name</label>
+      <input size="120" type="text" name="company" placeholder="Company Name" />
+      <br />
+      <label for="position">Position</label>
+      <input size="120" type="text" name="position" placeholder="Position" />
+      <br />
+
+      <!-- the textarea must be half the page wide and 50 rows tall -->
+      <textarea name="description" placeholder="Description" rows="25" cols="150"></textarea>
+      <br />
+      <input type="radio" name="language" value="english" checked> English<br>
+      <input type="radio" name="language" value="french"> French<br>
+      <input type="submit" value="Submit" />
+    </form>
+</body>
+</html>
