@@ -23,7 +23,7 @@ app.use(express.static('public'));
 
 // define the first route
 app.get('/', (req: Request, res: Response) => {
-  res.render('index2', {message: "Waiting for your question"});
+  res.render('index', {message: "Waiting for your question"});
 });
 
 app.post('/', (req: Request, res: Response) => {
@@ -31,15 +31,21 @@ app.post('/', (req: Request, res: Response) => {
   const job      = req.body.job;
   const language = req.body.language;
   const position = req.body.position;
+  // if one of the field is empty, return to the form
+  if (company === "" || job === "" || language === "" || position === "") {
+    res.render('index', {message: "Please fill all the fields"});
+    return;
+  }
   
+
   getResult(company, position, job, language)
     .then((result) => {
       // render, but without escaping html that are in message
       res.set('Content-Type', 'text/html');
-      res.render('index2', {message: result});
+      res.render('index', {message: result});
     })
     .catch((error) => {
-      res.render('index2', {message: error});
+      res.render('index', {message: error});
     });
 });
 
