@@ -6,6 +6,12 @@ function nullToEmptyString(str: string | null): string {
   else { return str;}
 }
 
+// nl2br function
+
+function nl2br(str: string): string {
+  return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
+}
+
 async function main() { }
 
 export  async function getResult(company: string, position: string, job: string, language: string) {
@@ -43,6 +49,6 @@ export  async function getResult(company: string, position: string, job: string,
   });
   
   console.log(chatCompletion.choices[0].message.content);
-  return nullToEmptyString(chatCompletion.choices[0].message.content)
+  return nl2br( nullToEmptyString(chatCompletion.choices[0].message.content));
 }
 
