@@ -18,18 +18,18 @@ Detailed career path
 -- Drive sessions to write down and adopt DevOps standards
 -- Maximize automation everywhere it is possible (Ranorex, NewMan)
 -- Migrate Classic Azure Pipelines to YAML Azure Pipelines
--- Develop in C# / .Net Core
+-- Develop applications in C# / .Net Core
 -- Part of making the company a great place to work (GPTW 2020)
 
 - Self-employed, enterprise oriented IT consultant from February 2019 to November 2019
--- Orange Madagascar: Project Manager on the refactoring of the B2B related applications (Java, Angular, Atlassian forge and CI/CD)
--- Arawak: Coach for the IT team (Jira setup, reporting)
--- ATS: Project Manager on a performance management tool for  about 1000 collaborators (React, Symfony, Jenkins CI/CD)
+-- Orange Madagascar (Major telecommunication actor): Project Manager on the refactoring of the B2B related applications (Java, Angular, Atlassian forge and CI/CD)
+-- Arawak (Textile factory): Coach for the IT team (Jira setup, reporting)
+-- ATS (Business Process Outsourcing): Project Manager on a performance management tool for  about 1000 collaborators (React, Symfony, Jenkins CI/CD)
 -- DevFest Madagascar: Speaker at the 2019 to 2022 DevFest sessions organized by the Google Develpers group in Madagascar
 
-- Chief Academic Officer at ESTI from November 2016 to February 2019
+- Chief Academic Officer at ESTI (IT University) from November 2016 to February 2019
 -- Manage Information Technology and / Computer Science related PhD level teachers (Syllabus validation)
--- Drive teaching to meet the required level
+-- Drive teaching to meet the required level of the IT industry
 -- Manage relationship with enterprises
 -- Coordinate the Information System to reflect the philosophy of the institute
 
@@ -80,7 +80,7 @@ Detailed career path
 --- Customer care
 -- Experience and knowledge transmission to the growing team members.
 
-- IT Architect at Gulfsat Madagascar from June 2009 to November 2010 
+- IT Architect at Gulfsat Madagascar (Major telecommunication actor) from June 2009 to November 2010 
 -- UNIX System Administrator and Architect:
 --- Virtualization: KVM, LXC and OpenVZ
 --- Storage: NFS, RAID, LVM

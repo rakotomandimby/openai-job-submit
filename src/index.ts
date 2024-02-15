@@ -1,6 +1,3 @@
-// start an express server with a single endpoint and a basic form using the easiest template engine
-// npm install express ejs
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';

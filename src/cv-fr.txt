@@ -22,12 +22,12 @@ Parcours professionnel détaillé
 -- Participer à faire de l'entreprise un "Great place to work" (GPTW 2020)
 
 - Consultant IT indépendant orienté informatique d'entreprise de février 2019 à novembre 2019
--- Orange Madagascar : Chef de projet sur la refonte des applications B2B (Java, Angular, Atlassian forge et CI/CD)
--- Arawak : Coach pour l'équipe IT (configuration de Jira, reporting)
--- ATS : Chef de projet sur un outil de gestion de la performance pour environ 1000 collaborateurs (React, Symfony, Jenkins CI/CD)
+-- Orange Madagascar (Acteur majeur des télécommunications): Chef de projet sur la refonte des applications B2B (Java, Angular, Atlassian forge et CI/CD)
+-- Arawak (Usine textile): Coach pour l'équipe IT (configuration de Jira, reporting)
+-- ATS (Externalisation des processus métiers): Chef de projet sur un outil de gestion de la performance pour environ 1000 collaborateurs (React, Symfony, Jenkins CI/CD)
 -- DevFest Madagascar : Orateur lors des sessions DevFest de 2019 à 2022 organisées par le groupe des développeurs Google à Madagascar
 
-- Responsable académique de l'ESTI de novembre 2016 à février 2019
+- Responsable académique de l'ESTI (Ecole supérieure d'informatique) de novembre 2016 à février 2019
 -- Gérer des enseignants en technologies de l'information de niveau doctorat (validation des programmes)
 -- Diriger l'enseignement pour atteindre le niveau requis
 -- Gérer les relations avec les entreprises
@@ -80,7 +80,7 @@ Parcours professionnel détaillé
 --- Soin de la clientèle
 -- Transfert de compétences aux membres de l'équipe en croissance.
 
-- Architecte IT chez Gulfsat Madagascar de juin 2009 à novembre 2010 
+- Architecte IT chez Gulfsat Madagascar (Acteur majeur des télécommunications) de juin 2009 à novembre 2010 
 -- Administrateur système et architecte UNIX :
 --- Virtualisation : KVM, LXC et OpenVZ
 --- Stockage : NFS, RAID, LVM

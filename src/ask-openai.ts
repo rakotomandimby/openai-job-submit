@@ -6,28 +6,23 @@ function nullToEmptyString(str: string | null): string {
   else { return str;}
 }
 
-// nl2br function
 
 function nl2br(str: string): string {
   return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
 }
-
+ 
 async function main() { }
 
 export  async function getResult(company: string, position: string, job: string, language: string) {
   const openai = new OpenAI({
     apiKey: process.env["OPENAI_API_KEY"]
   });
-  // print absolut current directory
   console.log("Current directory: " + __dirname);
 
-  // put the content of the ./cv-en.txt file in the cv_en variable 
   const cv_en = fs.readFileSync('./src/cv-en.txt', 'utf8');
-  // put the content of the ./cv-fr.txt file in the cv_fr variable
   const cv_fr = fs.readFileSync('./src/cv-fr.txt', 'utf8');  
   const chatCompletion = await openai.chat.completions.create({
     messages: [
-      // tell chatbot he has the assistant role
       {
         role: 'system',
         content: 'Given a job description and a CV, act as an assistant that helps to write a resume that will be valuable to get a job.'
