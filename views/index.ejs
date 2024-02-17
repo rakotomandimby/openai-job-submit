@@ -21,22 +21,22 @@
         <h2 class="mt-4">Post a Job</h2>
         <form class="mt-4" action="/" method="POST">
           <div class="mb-3">
-            <label for="companyName" class="form-label">Company name</label>
-            <input type="text" class="form-control" id="companyName" placeholder="Enter company name">
+            <label for="company" class="form-label">Company name</label>
+            <input type="text" class="form-control" id="company" placeholder="Enter company name" name="company" >
           </div>
           <div class="mb-3">
             <label for="position" class="form-label">Position</label>
-            <input type="text" class="form-control" id="position" placeholder="Enter position">
+            <input type="text" class="form-control" id="position" placeholder="Enter position" name="position">
           </div>
           <div class="mb-3">
-            <label for="jobDescription" class="form-label">Job description</label>
-            <textarea class="form-control" id="jobDescription" rows="3"></textarea>
+            <label for="job" class="form-label">Job description</label>
+            <textarea id="job" class="form-control" rows="30" name="job"></textarea>
           </div>
           <div class="mb-3">
             <label for="language" class="form-label">Language</label><br>
-            <input type="radio" id="language" name="language" value="English">
+            <input type="radio" id="languageen" name="language" value="English">
             <label for="language" class="form-label">English</label><br>
-            <input type="radio" id="language" name="language" value="French">
+            <input type="radio" id="languagefr" name="language" value="French">
             <label for="language" class="form-label">French</label><br>
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>

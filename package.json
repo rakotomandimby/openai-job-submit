@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "/home/mihamina/Apps/node/bin/npx tsc",
-    "start": "/home/mihamina/Apps/node/bin/npx tsc && /home/mihamina/Apps/node/bin/node dist/index.js"
+    "build": "rm -rfv dist && mkdir -pv dist/views && cp -rv views/* dist/views/ && /home/app/node/bin/npx tsc",
+    "start": "rm -rfv dist && mkdir -pv dist/views && cp -rv views/* dist/views/ && /home/app/node/bin/npx tsc && /home/app/node/bin/node dist/index.js"
   },
   "keywords": [],
   "author": "",

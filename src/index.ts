@@ -24,16 +24,16 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.post('/', (req: Request, res: Response) => {
+
   const company  = req.body.company;
   const job      = req.body.job;
   const language = req.body.language;
   const position = req.body.position;
-  // if one of the field is empty, return to the form
-  if (company === "" || job === "" || language === "" || position === "") {
+  // if one of the field is empty or undefined return to the form
+  if (!company || !position || !job || !language) {
     res.render('index', {message: "Please fill all the fields"});
     return;
-  }
-  
+  }  
 
   getResult(company, position, job, language)
     .then((result) => {
