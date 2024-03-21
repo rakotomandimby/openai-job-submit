@@ -29,13 +29,14 @@ app.post('/', (req: Request, res: Response) => {
   const job      = req.body.job;
   const language = req.body.language;
   const position = req.body.position;
+  const characters = req.body.characters;
   // if one of the field is empty or undefined return to the form
-  if (!company || !position || !job || !language) {
+  if (!company || !position || !job || !language || !characters) {
     res.render('index', {message: "Please fill all the fields"});
     return;
   }  
 
-  getResult(company, position, job, language)
+  getResult(company, position, job, language, characters)
     .then((result) => {
       // render, but without escaping html that are in message
       res.set('Content-Type', 'text/html');

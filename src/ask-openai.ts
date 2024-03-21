@@ -12,7 +12,7 @@ function nl2br(str: string): string {
 
 async function main() { }
 
-export  async function getResult(company: string, position: string, job: string, language: string) {
+export  async function getResult(company: string, position: string, job: string, language: string, chars: string) {
   const openai = new OpenAI({
     apiKey: process.env["OPENAI_API_KEY"]
   });
@@ -32,15 +32,14 @@ export  async function getResult(company: string, position: string, job: string,
           role: 'system',
           content: 'Compte tenu d\'une description de poste et d\'un CV, agis en tant qu\'assistant qui aide à rédiger une lettre de motivation qui sera utile pour obtenir un emploi.'
             + 'Prends ce que tu sais sur la société "'+company+'"'
-            + 'et écris une lettre de motivation avec des mots qui sont significatifs pour le responsable de recrutements de la societé' + company + '. '
+            + 'et écris une lettre de motivation avec limitée à '+chars+' caractères avec des mots qui sont significatifs pour le responsable de recrutements de la societé' + company + '. '
             + 'Voici la description de poste:\n"'+job+'".\n'
             + 'Le CV du candidat est le suivant:\n"' + cv_fr + '".\n'
             + 'Parles à la première personne, comme si tu étais le candidat.'
         },
         {
           role: 'user',
-          content: 'Écris une lettre de motivation en '+language+' pour postuler au poste "'+position+'" dans la société "'+company+'".'
-            + 'Commences par un paragraphe parlant des informations publiques connues sur l\'orientation IT de '+ company +' et ses recrutements.\n',
+          content: 'Écris une lettre de motivation limintée à '+chars+' caratères en '+language+' pour postuler au poste "'+position+'" dans la société "'+company+'".'
         }
       ],
       model: 'gpt-4-turbo-preview',
@@ -56,15 +55,14 @@ export  async function getResult(company: string, position: string, job: string,
           role: 'system',
           content: 'Given a job description and a CV, act as an assistant that helps to write a cover letter that will be valuable to get a job.'
             + 'Grab what you have about the company "'+company+'"'
-            + 'and write a cover letter with words that are meaningfull to human resource staff. '
+            + 'and write a less than '+chars+' characters cover letter with words that are meaningfull to human resource staff. '
             + 'This is the job description:\n"'+job+'".\n'
             + 'The CV is the following:\n"' + cv_en + '".\n'
             + 'You will talk at the first person, as if you were the candidate.'
         },
         {
           role: 'user',
-          content: 'Write an cover letter for the position "'+position+'" at the company "'+company+'".'
-            + 'Start it with a paragraph talking about public known information of '+ company +' IT orientation and recruitments.\n',
+          content: 'Write a less than '+chars+' caracters cover letter for the position "'+position+'" at the company "'+company+'".'
         }
       ],
       model: 'gpt-4-turbo-preview',

@@ -30,14 +30,18 @@
           </div>
           <div class="mb-3">
             <label for="job" class="form-label">Job description</label>
-            <textarea id="job" class="form-control" rows="30" name="job"></textarea>
+            <textarea id="job" class="form-control" rows="15" name="job"></textarea>
           </div>
           <div class="mb-3">
-            <label for="language" class="form-label">Language</label><br>
+            <label for="language" class="form-label">Language</label><br/>
             <input type="radio" id="languageen" name="language" value="English">
-            <label for="language" class="form-label">English</label><br>
+            <label for="language" class="form-label">English</label> 
             <input type="radio" id="languagefr" name="language" value="French">
-            <label for="language" class="form-label">French</label><br>
+            <label for="language" class="form-label">French</label>
+          </div>
+          <div class="mb-3">
+            <label for="characters-number" class="form-label">Number of Characters</label>
+            <input type="number" class="form-control" id="characters-number" placeholder="Enter number of characters" name="characters" value="5000">
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
