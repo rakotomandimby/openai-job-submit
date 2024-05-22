@@ -30,11 +30,17 @@ app.post('/', (req: Request, res: Response) => {
   const language = req.body.language;
   const position = req.body.position;
   const characters = req.body.characters;
+  const token = req.body.token;
   // if one of the field is empty or undefined return to the form
-  if (!company || !position || !job || !language || !characters) {
+  if (!company || !position || !job || !language || !characters || !token) {
     res.render('index', {message: "Please fill all the fields"});
     return;
-  }  
+  }
+  // if the token is not "mandimby7" return to the form
+  if (token !== "mandimby7") {
+    res.render('index', {message: "Wrong token"});
+    return;
+  }
 
   getResult(company, position, job, language, characters)
     .then((result) => {
