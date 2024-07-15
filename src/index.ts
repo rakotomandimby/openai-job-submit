@@ -1,3 +1,4 @@
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
@@ -5,57 +6,42 @@ import { Request, Response } from 'express';
 import { getResult } from './ask-openai';
 
 const app = express();
-const port = 3000;
-app.use(bodyParser.urlencoded({ extended: true })); // Parses form-encoded data
+const port = process.env.PORT || 3000; // Allow port configuration via environment variable
 
-// set the view engine to ejs
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
-
-// set the views directory
 app.set('views', path.join(__dirname, 'views'));
-
-// use the express-static middleware
-
 app.use(express.static('public'));
 
-// define the first route
+// Routes
 app.get('/', (req: Request, res: Response) => {
-  res.render('index', {message: "Waiting for your question"});
+  res.render('index', { message: "Waiting for your question" });
 });
 
-app.post('/', (req: Request, res: Response) => {
+app.post('/', async (req: Request, res: Response) => {
+  const { company, job, language, position, characters, token } = req.body;
 
-  const company  = req.body.company;
-  const job      = req.body.job;
-  const language = req.body.language;
-  const position = req.body.position;
-  const characters = req.body.characters;
-  const token = req.body.token;
-  // if one of the field is empty or undefined return to the form
+  // Input validation
   if (!company || !position || !job || !language || !characters || !token) {
-    res.render('index', {message: "Please fill all the fields"});
-    return;
-  }
-  // if the token is not "mandimby7" return to the form
-  if (token !== "mandimby7") {
-    res.render('index', {message: "Wrong token"});
-    return;
+    return res.render('index', { message: "Please fill all the fields" });
   }
 
-  getResult(company, position, job, language, characters)
-    .then((result) => {
-      // render, but without escaping html that are in message
-      res.set('Content-Type', 'text/html');
-      res.render('index', {message: result});
-    })
-    .catch((error) => {
-      res.render('index', {message: error});
-    });
+  // Token validation - Ideally, use a more robust authentication mechanism
+  if (token !== process.env.SECRET_TOKEN) { // Store token in environment variable
+    return res.render('index', { message: "Invalid token" }); 
+  }
+
+  try {
+    const result = await getResult(company, position, job, language, characters);
+    res.render('index', { message: result }); // EJS should handle HTML escaping by default
+  } catch (error) {
+    console.error("Error processing request:", error); // Log errors for debugging
+    res.status(500).render('index', { message: "An error occurred" }); 
+  }
 });
 
-
-// start the express server
-
+// Server start
 app.listen(port, () => {
-  console.log(`server started on port ${port}`);
+  console.log(`Server started on port ${port}`);
 });
