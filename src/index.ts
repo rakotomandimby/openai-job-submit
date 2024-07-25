@@ -3,7 +3,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { Request, Response } from 'express';
-import { getResult } from './ask-openai';
+// import { getResult } from './ask-openai';
+import { getResult } from './ask-gemini';
 
 const app = express();
 const port = process.env.PORT || 3000; // Allow port configuration via environment variable
@@ -28,7 +29,7 @@ app.post('/', async (req: Request, res: Response) => {
   }
 
   // Token validation - Ideally, use a more robust authentication mechanism
-  if (token !== process.env.SECRET_TOKEN) { // Store token in environment variable
+  if (token !== 'mandimby7') { // Store token in environment variable
     return res.render('index', { message: "Invalid token" }); 
   }
 

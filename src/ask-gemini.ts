@@ -27,7 +27,6 @@ export async function getResult(company: string, position: string, job: string, 
   const result = await model.generateContent(prompt);
   const response = result.response;
   const text = response.text();
-  console.log(text);
-  // [END system_instruction]
+  return text;
 }
 
