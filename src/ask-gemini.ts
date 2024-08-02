@@ -1,32 +1,19 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import fs from 'fs';
+import { getSystemInstruction } from './system-instruction';
+import { getPrompt } from './prompt';
+import { nl2br, nullToEmptyString, getAPIKey } from './utils';
 
-function getGeminiAPIKey(): string {
-  if (process.env["GEMINI_API_KEY"] === undefined) {return "";} 
-  else {return process.env["GEMINI_API_KEY"];}
-}
 
-export async function getResult(company: string, position: string, job: string, language: string, chars: string) {
-  const genAI = new GoogleGenerativeAI(getGeminiAPIKey());
+export async function getResult(company: string, position: string, job: string, language: string, chars: string): Promise<string> {
+  const genAI = new GoogleGenerativeAI(getAPIKey("gemini"));
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-pro-latest",
-    systemInstruction: "You are a cat. Your name is Neko.",
+    systemInstruction: getSystemInstruction(company, job, chars, language)
   });
-
-  console.log("Current directory: " + __dirname);
-
-  console.log("Company: " + company);
-  console.log("Position: " + position);
-  console.log("Job: " + job);
-  console.log("Language: " + language);
-  const cv_en = fs.readFileSync('./src/cv-en.txt', 'utf8');
-  const cv_fr = fs.readFileSync('./src/cv-fr.txt', 'utf8');
-
-  const prompt = "Good morning! How are you?";
-
+  const prompt = getPrompt(language, company, position,chars);
   const result = await model.generateContent(prompt);
   const response = result.response;
   const text = response.text();
-  return text;
+  return nl2br(text);
 }
 
