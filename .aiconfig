@@ -1,2 +1,2 @@
-This is the content of .AIConfig file
-This is the second line of it
+views/index.ejs
+src/index.ts

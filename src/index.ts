@@ -3,8 +3,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { Request, Response } from 'express';
-// import { getResult } from './ask-openai';
-import { getResult } from './ask-gemini';
+import { getResult as setOpenAIResult } from './ask-openai';
+import { getResult as getGeminiResult } from './ask-gemini';
 
 const app = express();
 const port = process.env.PORT || 3000; // Allow port configuration via environment variable
@@ -17,7 +17,7 @@ app.use(express.static('public'));
 
 // Routes
 app.get('/', (req: Request, res: Response) => {
-  res.render('index', { message: "Waiting for your question" });
+  res.render('index', { geminiMessage: "Waiting for your question", openAIMessage: "Waiting for your question"});
 });
 
 app.post('/', async (req: Request, res: Response) => {
@@ -25,17 +25,18 @@ app.post('/', async (req: Request, res: Response) => {
 
   // Input validation
   if (!company || !position || !job || !language || !characters || !token) {
-    return res.render('index', { message: "Please fill all the fields" });
+    return res.render('index', { geminiMessage: "Missing required fields", openAIMessage: "Missing required fields" });
   }
 
   // Token validation - Ideally, use a more robust authentication mechanism
   if (token !== 'mandimby7') { // Store token in environment variable
-    return res.render('index', { message: "Invalid token" }); 
+    return res.render('index', { geminiMessage: "Invalid token", openAIMessage: "Invalid token" }); 
   }
 
   try {
-    const result = await getResult(company, position, job, language, characters);
-    res.render('index', { message: result }); // EJS should handle HTML escaping by default
+    const geminiResult = await getGeminiResult(company, position, job, language, characters);
+    const openAIResult = await setOpenAIResult(company, position, job, language, characters);
+    res.render('index', { geminiMessage: getGeminiResult, openAIMessage:openAIResult }); // EJS should handle HTML escaping by default
   } catch (error) {
     console.error("Error processing request:", error); // Log errors for debugging
     res.status(500).render('index', { message: "An error occurred" }); 
