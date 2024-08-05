@@ -36,7 +36,7 @@ app.post('/', async (req: Request, res: Response) => {
   try {
     const geminiResult = await getGeminiResult(company, position, job, language, characters);
     const openAIResult = await setOpenAIResult(company, position, job, language, characters);
-    res.render('index', { geminiMessage: getGeminiResult, openAIMessage:openAIResult }); // EJS should handle HTML escaping by default
+    res.render('index', { geminiMessage: geminiResult, openAIMessage:openAIResult }); // EJS should handle HTML escaping by default
   } catch (error) {
     console.error("Error processing request:", error); // Log errors for debugging
     res.status(500).render('index', { message: "An error occurred" }); 
