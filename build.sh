@@ -12,6 +12,8 @@ if [ `hostname` == "mail.natixgroup.com" ]; then
     && tsc 
 else
   PATH="./node_modules/.bin:"${PATH}
+  npm install --save typescript @types/node ts-node ts-node-dev
+  npm install 
   rm -rfv dist/public \
     && rm -rfv dist/views \
     && tsc
