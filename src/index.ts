@@ -1,18 +1,18 @@
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { Request, Response } from 'express';
 import { getResult as setOpenAIResult } from './ask-openai';
 import { getResult as getGeminiResult } from './ask-gemini';
-import { getHrConversation } from './hr-conversation';
-
+import { getHrConversation, updateHrConversation } from './hr-conversation'; // Import updateHrConversation
+import QuestionAnswer from './question-answer-model';
 
 const app = express();
 const port = process.env.PORT || 3000; // Allow port configuration via environment variable
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // Add middleware to parse JSON body
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public'));
@@ -21,15 +21,37 @@ app.use(express.static('public'));
 app.get('/', (req: Request, res: Response) => {
   res.render('index', { geminiMessage: "Waiting for your question", openAIMessage: "Waiting for your question"});
 });
-app.get('/view-conversation/lang/:lang', async (req: Request, res: Response) => {
-  // lang is either "english" or "french". Other values must return a 404
+
+app.get('/conversation/mode/:mode/lang/:lang', async (req: Request, res: Response) => {
   if (req.params.lang !== 'english' && req.params.lang !== 'french') {
     return res.status(404).send('Not found');
   }
+  if (req.params.mode !== 'view' && req.params.mode !== 'edit') {
+    return res.status(404).send('Not found');
+  }
   const messages = await getHrConversation(req.params.lang);
-  res.render(`${req.params.lang}-conversation-view`, {messages: messages});
+  res.render(`${req.params.lang}-conversation-${req.params.mode}`, {messages: messages});
 });
 
+app.post('/update-conversation/lang/:lang', async (req: Request, res: Response) => {
+  if (req.params.lang !== 'english' && req.params.lang !== 'french') {
+    return res.status(404).send('Not found');
+  }
+
+  try {
+    const messages: QuestionAnswer[] = Object.values(req.body).map((message: any) => ({
+      id: message.id,
+      question: message.question,
+      answer: message.answer
+    }));
+
+    await updateHrConversation(req.params.lang, messages);
+    res.redirect(`/conversation/mode/view/lang/${req.params.lang}`); // Redirect to view page
+  } catch (error) {
+    console.error("Error updating conversation:", error);
+    res.status(500).send("An error occurred while updating the conversation.");
+  }
+});
 
 app.post('/', async (req: Request, res: Response) => {
   const { company, job, language, position, characters, token } = req.body;

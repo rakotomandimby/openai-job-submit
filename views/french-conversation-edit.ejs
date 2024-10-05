@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Conversation en Francais</title>
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="mt-4">Conversation en Francais</h2>
+      <form id="conversationForm" method="POST" action="/update-conversation/lang/french">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Question</th>
+              <th scope="col">Réponse</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (messages && messages.length > 0) { %>
+              <% messages.forEach(function(message) { %>
+                <tr>
+                  <td><%= message.id %>
+                    <input type="hidden" name="messages[<%= message.id %>][id]" value="<%= message.id %>">
+                  </td>
+                  <td><input type="text" class="form-control" name="messages[<%= message.id %>][question]" value="<%= message.question %>"></td>
+                  <td><input type="text" class="form-control" name="messages[<%= message.id %>][answer]" value="<%= message.answer %>"></td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="3">No messages found.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </form>
+    </div>
+    <script>
+      $(document).ready(function() {
+        $("#conversationForm").submit(function(event) {
+          event.preventDefault(); // Prevent default form submission
+
+          // Create an array of objects from the form data
+          let formData = $(this).serializeArray().reduce(function(result, item) {
+            let keyParts = item.name.match(/\[(.*?)\]/g);
+            let index = keyParts[0].slice(1, -1);
+            let key = keyParts[1].slice(1, -1);
+
+            result[index] = result[index] || {};
+            result[index][key] = item.value;
+            return result;
+          }, {});
+
+          // Convert the array to JSON string
+          let jsonData = JSON.stringify(formData);
+
+          // Send the JSON data to the server using AJAX
+          $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            contentType: 'application/json',
+            data: jsonData,
+            success: function(response) {
+              let host = window.location.protocol + '//' + window.location.host;
+              window.location.href = host + '/conversation/mode/view/lang/french';
+            },
+            error: function(error) {
+              // Handle error (e.g., display an error message)
+              console.error('Error updating conversation:', error);
+              alert('An error occurred while updating the conversation.');
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

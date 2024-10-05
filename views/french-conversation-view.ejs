@@ -1,24 +1,40 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <title>Conversation en Francais</title>
   </head>
   <body>
     <div class="container">
       <h2 class="mt-4">Conversation en Francais</h2>
-      <ul class="list-group">
-        <% if (messages && messages.length > 0) { %>
-          <% messages.forEach(function(message) { %>
-          <li class="list-group-item"><%= message.question %> <br/> <%= message.answer %> </li>
-          <% }); %>
-        <% } else { %>
-          <li class="list-group-item">No messages found.</li>
-        <% } %>
-      </ul>
+      <a href="/conversation/mode/edit/lang/french" class="btn btn-primary mb-3">Modifier la Conversation</a>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Question</th>
+            <th scope="col">Réponse</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (messages && messages.length > 0) { %>
+            <% messages.forEach(function(message) { %>
+              <tr>
+                <td><%= message.id %></td>
+                <td><%= message.question %></td>
+                <td><%= message.answer %></td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="3">No messages found.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
     </div>
   </body>
 </html>
