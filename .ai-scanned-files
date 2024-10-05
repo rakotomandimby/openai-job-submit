@@ -1,2 +1,6 @@
-views/index.ejs
-src/index.ts
++views/*.*
++src/*.*
+-src/cv-en.txt
+-src/cv-fr.txt
++package.json
++tsconfig.json

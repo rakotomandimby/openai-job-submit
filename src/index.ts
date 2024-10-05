@@ -5,6 +5,8 @@ import path from 'path';
 import { Request, Response } from 'express';
 import { getResult as setOpenAIResult } from './ask-openai';
 import { getResult as getGeminiResult } from './ask-gemini';
+import { getHrConversation } from './hr-conversation';
+
 
 const app = express();
 const port = process.env.PORT || 3000; // Allow port configuration via environment variable
@@ -19,6 +21,15 @@ app.use(express.static('public'));
 app.get('/', (req: Request, res: Response) => {
   res.render('index', { geminiMessage: "Waiting for your question", openAIMessage: "Waiting for your question"});
 });
+app.get('/view-conversation/lang/:lang', async (req: Request, res: Response) => {
+  // lang is either "english" or "french". Other values must return a 404
+  if (req.params.lang !== 'english' && req.params.lang !== 'french') {
+    return res.status(404).send('Not found');
+  }
+  const messages = await getHrConversation(req.params.lang);
+  res.render(`${req.params.lang}-conversation-view`, {messages: messages});
+});
+
 
 app.post('/', async (req: Request, res: Response) => {
   const { company, job, language, position, characters, token } = req.body;
