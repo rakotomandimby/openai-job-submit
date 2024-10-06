@@ -23,14 +23,17 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.get('/conversation/mode/:mode/lang/:lang', async (req: Request, res: Response) => {
-  if (req.params.lang !== 'english' && req.params.lang !== 'french') {
+  const { lang, mode } = req.params;
+
+  if (lang !== 'english' && lang !== 'french') {
     return res.status(404).send('Not found');
   }
-  if (req.params.mode !== 'view' && req.params.mode !== 'edit') {
+  if (mode !== 'view' && mode !== 'edit') {
     return res.status(404).send('Not found');
   }
-  const messages = await getHrConversation(req.params.lang);
-  res.render(`${req.params.lang}-conversation-${req.params.mode}`, {messages: messages});
+  const messages = await getHrConversation(lang);
+  const pageTitle = lang === 'english' ? 'English Conversation' : 'Conversation en Francais';
+  res.render( `conversation-${mode}`, { messages, pageTitle , lang}); 
 });
 
 app.post('/update-conversation/lang/:lang', async (req: Request, res: Response) => {
@@ -46,7 +49,6 @@ app.post('/update-conversation/lang/:lang', async (req: Request, res: Response) 
     }));
 
     await updateHrConversation(req.params.lang, messages);
-    res.redirect(`/conversation/mode/view/lang/${req.params.lang}`); // Redirect to view page
   } catch (error) {
     console.error("Error updating conversation:", error);
     res.status(500).send("An error occurred while updating the conversation.");

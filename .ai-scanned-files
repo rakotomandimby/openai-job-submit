@@ -1,6 +1,5 @@
 +views/*.*
-+src/*.*
++src/index.ts
 -src/cv-en.txt
 -src/cv-fr.txt
 +package.json
-+tsconfig.json
