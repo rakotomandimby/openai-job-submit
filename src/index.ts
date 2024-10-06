@@ -33,7 +33,9 @@ app.get('/conversation/mode/:mode/lang/:lang', async (req: Request, res: Respons
   }
   const messages = await getHrConversation(lang);
   const pageTitle = lang === 'english' ? 'English Conversation' : 'Conversation en Francais';
-  res.render( `conversation-${mode}`, { messages, pageTitle , lang}); 
+  const save = lang === 'english' ? 'Save' : 'Enregistrer';
+  const addLine = lang === 'english' ? 'Add Line' : 'Ajouter une ligne';
+  res.render( `conversation-${mode}`, { messages, pageTitle , lang, save, addLine }); 
 });
 
 app.post('/update-conversation/lang/:lang', async (req: Request, res: Response) => {
@@ -49,6 +51,7 @@ app.post('/update-conversation/lang/:lang', async (req: Request, res: Response) 
     }));
 
     await updateHrConversation(req.params.lang, messages);
+    res.status(200).send('Conversation updated successfully');
   } catch (error) {
     console.error("Error updating conversation:", error);
     res.status(500).send("An error occurred while updating the conversation.");
