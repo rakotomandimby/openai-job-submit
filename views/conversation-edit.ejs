@@ -62,8 +62,8 @@
               <td>${newId}
                 <input type="hidden" name="messages[${newId}][id]" value="${newId}">
               </td>
-              <td><input type="text" class="form-control" name="messages[${newId}][question]" value=""></td>
-              <td><textarea class="form-control" name="messages[${newId}][answer]" rows="3"></textarea></td>
+              <td><textarea class="form-control" name="messages[${newId}][question]" rows="3"></textarea></td>
+              <td><textarea class="form-control" name="messages[${newId}][answer]"   rows="3"></textarea></td>
             </tr>
           `;
           $('#conversationTable tbody').append(newRow);

@@ -2,23 +2,32 @@ import OpenAI from 'openai';
 import { getPrompt } from './prompt';
 import { getSystemInstruction } from './system-instruction';
 import { nl2br, nullToEmptyString, getAPIKey } from './utils';
+import { getHrConversation } from './hr-conversation';
 
 export  async function getResult(company: string, position: string, job: string, language: string, chars: string ): Promise<string> {
   const openai = new OpenAI({apiKey: getAPIKey("openai")});
+
+  let history: any[] = [];
+  history.push({role: "system", content: getSystemInstruction(company, job, chars, language)});
+  let hrConversation = await hRConversationToChatHistory("french");
+  hrConversation.forEach((message) => {
+    history.push(message);
+  });
+  history.push({role: "assistant", content: "Comment puis-je t'aider?"});
+
   const chatCompletion = await openai.chat.completions.create({
-    messages: [
-      {role: 'system'   , content: getSystemInstruction(company, job, chars, language)},
-      {role: 'user'     , content: "What is the word?"},
-      {role: 'assistant', content: "Tell me the first letter of the word."},
-      {role: 'user'     , content: "The first letter is 'c'."},
-      {role: 'assistant', content: "Tell me the second letter of the word."},
-      {role: 'user'     , content: "The second letter is 'a'."},
-      {role: 'assistant', content: "Tell me the third letter of the word."},
-      {role: 'user'     , content: "The third letter is 't'."},
-      {role: 'assistant', content: "Tell me the next letter of the word."},
-      {role: 'user'     , content: "There nis no more letters. What is the word?"}
-    ],
+    messages: history,
     model: 'chatgpt-4o-latest'});
   return nl2br( nullToEmptyString(chatCompletion.choices[0].message.content));
+}
+
+async function hRConversationToChatHistory(lang: string): Promise<any[]> {
+  const messages = await getHrConversation(lang);
+  let chatHistory:any[] = [];
+  messages.forEach((message) => {
+    chatHistory.push({role: "assistant", content: message.question});
+    chatHistory.push({role: "user"     , content: message.answer});
+  });
+  return chatHistory;
 }
 

@@ -2,6 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { getSystemInstruction } from './system-instruction';
 import { getPrompt } from './prompt';
 import { nl2br, getAPIKey } from './utils';
+import { getHrConversation } from './hr-conversation';
 
 
 export async function getResult(company: string, position: string, job: string, language: string, chars: string): Promise<string> {
@@ -12,20 +13,35 @@ export async function getResult(company: string, position: string, job: string, 
   });
   //const prompt = getPrompt(language, company, position,chars);
   //const result = await model.generateContent(prompt);
-  const startChatParams = {
-    history: [
-      {role: "user"  , parts: [{text: "What is the word?"}]},
-      {role: "model", parts: [{text: "Tell me the first letter of the word."}]},
-      {role: "user"  , parts: [{text: "The first letter is 'c'."}]},
-      {role: "model", parts: [{text: "Tell me the second letter of the word."}]},
-      {role: "user"  , parts: [{text: "The second letter is 'a'."}]},
-      {role: "model", parts: [{text: "Tell me the third letter of the word."}]},
-      {role: "user"  , parts: [{text: "The third letter is 't'."}]},
-      {role: "model", parts: [{text: "Tell me the next letter of the word."}]},
-    ]};
+  let history: ChatHistory[] = [];
+  history.push({role: "user", parts: [{text: "Aide moi à écrire ma lettre de motivation."}]});
+  let hrConversation = await hRConversationToChatHistory("french");
+  hrConversation.forEach((message) => {
+    history.push(message);
+  });
+  history.push({role: "model", parts: [{text: "Comment puis-je t'aider?"}]});
+
+  const startChatParams = {history: history}; 
+  // console.log("startChatParams", startChatParams); but expand nested objects
+  console.log("startChatParams", JSON.stringify(startChatParams));
   const chat = model.startChat(startChatParams);
-  const result = await chat.sendMessage("There is no more letters. What is the word?");
+  const result = await chat.sendMessage("Ecris une lettre de motivation pour moi.");
   const text = result.response.text();
   return nl2br(text);
+}
+
+async function hRConversationToChatHistory(lang: string): Promise<ChatHistory[]> {
+  const messages = await getHrConversation(lang);
+  let chatHistory:ChatHistory[] = [];
+  messages.forEach((message) => {
+    chatHistory.push({role: "model", parts: [{text: message.question}]});
+    chatHistory.push({role: "user", parts: [{text: message.answer}]});
+  });
+  return chatHistory;
+}
+
+interface ChatHistory {
+  role: string;
+  parts: {text: string}[];
 }
 
