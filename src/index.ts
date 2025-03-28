@@ -1,10 +1,10 @@
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { Request, Response } from 'express';
-import { getResult as setOpenAIResult } from './ask-openai';
+import { getResult as getOpenAIResult } from './ask-openai';
 import { getResult as getGeminiResult } from './ask-gemini';
+import { getAuthToken } from './utils';
 
 const app = express();
 const port = process.env.PORT || 3000; // Allow port configuration via environment variable
@@ -23,19 +23,17 @@ app.get('/', (req: Request, res: Response) => {
 app.post('/', async (req: Request, res: Response) => {
   const { company, job, language, position, characters, token } = req.body;
 
-  // Input validation
   if (!company || !position || !job || !language || !characters || !token) {
     return res.render('index', { geminiMessage: "Missing required fields", openAIMessage: "Missing required fields" });
   }
 
-  // Token validation - Ideally, use a more robust authentication mechanism
-  if (token !== 'mandimby7') { // Store token in environment variable
+  if (token !== getAuthToken()) {
     return res.render('index', { geminiMessage: "Invalid token", openAIMessage: "Invalid token" }); 
   }
 
   try {
     const geminiResult = await getGeminiResult(company, position, job, language, characters);
-    const openAIResult = await setOpenAIResult(company, position, job, language, characters);
+    const openAIResult = await getOpenAIResult(company, position, job, language, characters);
     res.render('index', { geminiMessage: geminiResult, openAIMessage:openAIResult }); // EJS should handle HTML escaping by default
   } catch (error) {
     console.error("Error processing request:", error); // Log errors for debugging

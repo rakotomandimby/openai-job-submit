@@ -2,6 +2,7 @@
 
 if [ `hostname` == "mail.natixgroup.com" ]; then
   . /home/ubuntu/.aikeys
+  . /home/ubuntu/.ai-auth-key
   WWW_PREFIX="/var/www/openai-resume/"
   PATH="/usr/local/node/bin:/var/www/openai-resume/node_modules/.bin:"${PATH}
   cd ${WWW_PREFIX}
