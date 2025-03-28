@@ -21,9 +21,9 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.post('/', async (req: Request, res: Response) => {
-  const { company, job, language, position, characters, token } = req.body;
+  const { company, job, language, position, words, token } = req.body;
 
-  if (!company || !position || !job || !language || !characters || !token) {
+  if (!company || !position || !job || !language || !words || !token) {
     return res.render('index', { geminiMessage: "Missing required fields", openAIMessage: "Missing required fields" });
   }
 
@@ -32,8 +32,8 @@ app.post('/', async (req: Request, res: Response) => {
   }
 
   try {
-    const geminiResult = await getGeminiResult(company, position, job, language, characters);
-    const openAIResult = await getOpenAIResult(company, position, job, language, characters);
+    const geminiResult = await getGeminiResult(company, position, job, language, words);
+    const openAIResult = await getOpenAIResult(company, position, job, language, words);
     res.render('index', { geminiMessage: geminiResult, openAIMessage:openAIResult }); // EJS should handle HTML escaping by default
   } catch (error) {
     console.error("Error processing request:", error); // Log errors for debugging
