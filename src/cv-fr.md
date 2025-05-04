@@ -6,6 +6,10 @@
 
 # Parcours professionnel détaillé
 
+- Consultant IT pour Color Telecom et Tel-On depuis 2025
+    - Architecte d'infrastructure Voix sur IP (VoIP)
+    - Développement de fonctionnalités Asterisk AGI et AMI pour le cœur de réseau IP PBX, en utilisant les langages PHP et Typescript
+    - Architecte d'infrastructure Linux sur serveurs physiques et Cloud (VMWare)
 - Architecte en technologies de l'information chez Intelios depuis août 2020
     - Diriger l'établissement des convention de codage
         - Établir les normes de développement logiciel selon les outils et configurations CI/CD (Jenkins)

@@ -10,7 +10,7 @@ export  async function getResult(company: string, position: string, job: string,
       {role: 'system', content: getSystemInstruction(company, job, words, language)},
       {role: 'user', content: getPrompt(language, company, position, words)}
     ],
-    model: 'gpt-4o'});
+    model: 'gpt-4.5-preview'});
   return nl2br( nullToEmptyString(chatCompletion.choices[0].message.content));
 }
 

@@ -7,7 +7,7 @@ import { nl2br, getAPIKey } from './utils';
 export async function getResult(company: string, position: string, job: string, language: string, words: string): Promise<string> {
   const genAI = new GoogleGenerativeAI(getAPIKey("gemini"));
   const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash-thinking-exp-01-21",
+    model : "gemini-2.5-pro-exp-03-25",
     systemInstruction: getSystemInstruction(company, job, words, language)
   });
   const prompt = getPrompt(language, company, position,words);
