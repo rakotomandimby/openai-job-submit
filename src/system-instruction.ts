@@ -52,27 +52,25 @@ export function getSystemInstructionCV(jobDescription: string, language: string)
 
   let system_instruction_fr = ():string => {
     return '# Instructions pour Génération de CV\n\n'
-      + 'Tu es un expert en rédaction de CV. Ta tâche est de créer un CV sur mesure basé sur le CV de base fourni et la description de poste spécifique. \n'
-      + 'Le CV doit mettre en évidence les compétences et expériences pertinentes du CV de base qui correspondent aux exigences du poste. \n'
-      + 'Réorganise et reformule les sections du CV de base pour les aligner étroitement avec la description de poste. \n'
-      + 'Assure-toi que le résultat est un CV complet, professionnel et optimisé pour le poste.\n\n'
-      + 'Voici la description du poste pour lequel adapter le CV:\n\n"' + jobDescription + '".\n\n'
-      + 'Voici le CV de base du candidat:\n\n"' + cv_fr_base + '".\n\n'
-      + 'Le CV généré doit être formaté dans un fragment HTML sans balise HTML, ni balise HEAD, ni balise  TITLE, ni balise BODY, ni balise BR .'
-      + 'Ne pas mettre de balises BR au dela du nécessaire dans le HTML du CV. Juste utiliser les BR nécessaires.'
+      + ' Tu es un expert en rédaction de CV. Ta tâche est de créer un CV sur mesure basé sur le CV de base fourni et la description de poste spécifique. \n'
+      + ' Le CV doit mettre en évidence les compétences et expériences pertinentes du CV de base qui correspondent aux exigences du poste. \n'
+      + ' Réorganise et reformule les sections du CV de base pour les aligner étroitement avec la description de poste. \n'
+      + ' Assure-toi que le résultat est un CV complet, professionnel et optimisé pour le poste.\n\n'
+      + ' Voici la description du poste pour lequel adapter le CV:\n\n"' + jobDescription + '".\n\n'
+      + ' Voici le CV de base du candidat:\n\n"' + cv_fr_base + '".\n\n'
+      + ' Le CV généré doit être formaté dans un fragment HTML sans balise HTML, ni balise HEAD, ni balise  TITLE, ni balise BODY, ni balise BR .'
       + ' Il ne faut mettre aucun élément Markdown dans la réponse.\n'
   }
 
   let system_instruction_en = ():string => {
     return '# CV Generation Instructions\n\n'
-      + 'You are an expert CV writer. Your task is to create a tailored CV based on the provided base CV and the specific job description.\n'
-      + 'The CV should highlight relevant skills and experiences from the base CV that match the job requirements.\n'
-      + 'Reorganize and rephrase sections of the base CV to align closely with the job description.\n'
-      + 'Ensure the output is a complete, professional CV optimized for the position.\n\n'
-      + 'This is the job description to tailor the CV for:\n\n"' + jobDescription + '".\n\n'
-      + 'This is the candidate\'s base CV:\n\n"' + cv_en_base + '".\n\n'
-      + 'The generated CV should be formatted in an HTML fragment without the HTML tag , nor the HEAD tag , nor the TITLE tag , nor the BODY tag, nor the BR tag.'
-      + ' Do not put extra BR tags in the HTML of the CV. Just use the necessary BR.'
+      + ' You are an expert CV writer. Your task is to create a tailored CV based on the provided base CV and the specific job description.\n'
+      + ' The CV should highlight relevant skills and experiences from the base CV that match the job requirements.\n'
+      + ' Reorganize and rephrase sections of the base CV to align closely with the job description.\n'
+      + ' Ensure the output is a complete, professional CV optimized for the position.\n\n'
+      + ' This is the job description to tailor the CV for:\n\n"' + jobDescription + '".\n\n'
+      + ' This is the candidate\'s base CV:\n\n"' + cv_en_base + '".\n\n'
+      + ' The generated CV should be formatted in an HTML fragment without the HTML tag , nor the HEAD tag , nor the TITLE tag , nor the BODY tag, nor the BR tag.'
       + ' Do not put any Markdown elements in the answer.\n';
   }
 
