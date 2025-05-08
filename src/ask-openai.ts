@@ -24,6 +24,6 @@ export async function getOpenAICVResult(jobDescription: string, position: string
       {role: 'user', content: getPromptCV(language, jobDescription, position)} // Use CV prompt
     ],
     model: 'gpt-4.5-preview'}); // Consider using a newer model if available, like gpt-4o
-  return nl2br(nullToEmptyString(chatCompletion.choices[0].message.content));
+  return nullToEmptyString(chatCompletion.choices[0].message.content);
 }
 

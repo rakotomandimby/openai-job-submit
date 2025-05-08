@@ -28,6 +28,6 @@ export async function getGeminiCVResult(jobDescription: string, position: string
   const result = await model.generateContent(prompt);
   const response = result.response;
   const text = response.text();
-  return nl2br(text);
+  return text;
 }
 

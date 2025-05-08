@@ -58,7 +58,9 @@ export function getSystemInstructionCV(jobDescription: string, language: string)
       + 'Assure-toi que le résultat est un CV complet, professionnel et optimisé pour le poste.\n\n'
       + 'Voici la description du poste pour lequel adapter le CV:\n\n"' + jobDescription + '".\n\n'
       + 'Voici le CV de base du candidat:\n\n"' + cv_fr_base + '".\n\n'
-      + 'Le CV généré doit être formaté dans un fragment HTML sans balise HTML, ni balise HEAD, ni balise  TITLE, ni balise BODY, ni balise BR .';
+      + 'Le CV généré doit être formaté dans un fragment HTML sans balise HTML, ni balise HEAD, ni balise  TITLE, ni balise BODY, ni balise BR .'
+      + 'Ne pas mettre de balises BR au dela du nécessaire dans le HTML du CV. Juste utiliser les BR nécessaires.'
+      + ' Il ne faut mettre aucun élément Markdown dans la réponse.\n'
   }
 
   let system_instruction_en = ():string => {
@@ -69,7 +71,9 @@ export function getSystemInstructionCV(jobDescription: string, language: string)
       + 'Ensure the output is a complete, professional CV optimized for the position.\n\n'
       + 'This is the job description to tailor the CV for:\n\n"' + jobDescription + '".\n\n'
       + 'This is the candidate\'s base CV:\n\n"' + cv_en_base + '".\n\n'
-      + 'The generated CV should be formatted in an HTML fragment without the HTML tag , nor the HEAD tag , nor the TITLE tag , nor the BODY tag, nor the BR tag.';
+      + 'The generated CV should be formatted in an HTML fragment without the HTML tag , nor the HEAD tag , nor the TITLE tag , nor the BODY tag, nor the BR tag.'
+      + ' Do not put extra BR tags in the HTML of the CV. Just use the necessary BR.'
+      + ' Do not put any Markdown elements in the answer.\n';
   }
 
   if (language === 'French') {
