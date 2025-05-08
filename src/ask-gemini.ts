@@ -1,16 +1,30 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { getSystemInstruction } from './system-instruction';
-import { getPrompt } from './prompt';
+import { getSystemInstructionCoverLetter, getSystemInstructionCV } from './system-instruction'; // Updated import
+import { getPromptCoverLetter, getPromptCV } from './prompt'; // Updated import
 import { nl2br, getAPIKey } from './utils';
 
-
-export async function getResult(company: string, position: string, job: string, language: string, words: string): Promise<string> {
+// Renamed from getResult to be specific to Cover Letters
+export async function getGeminiCoverLetterResult(company: string, position: string, job: string, language: string, words: string): Promise<string> {
   const genAI = new GoogleGenerativeAI(getAPIKey("gemini"));
   const model = genAI.getGenerativeModel({
-    model : "gemini-2.5-pro-exp-03-25",
-    systemInstruction: getSystemInstruction(company, job, words, language)
+    model : "gemini-1.5-pro-latest", // Updated to a generally available powerful model
+    systemInstruction: getSystemInstructionCoverLetter(company, job, words, language) // Use specific system instruction
   });
-  const prompt = getPrompt(language, company, position,words);
+  const prompt = getPromptCoverLetter(language, company, position, words); // Use specific prompt
+  const result = await model.generateContent(prompt);
+  const response = result.response;
+  const text = response.text();
+  return nl2br(text);
+}
+
+// New function for Gemini CV Generation
+export async function getGeminiCVResult(jobDescription: string, position: string, language: string): Promise<string> {
+  const genAI = new GoogleGenerativeAI(getAPIKey("gemini"));
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-pro-latest", // Updated to a generally available powerful model
+    systemInstruction: getSystemInstructionCV(jobDescription, language) // Use CV system instruction
+  });
+  const prompt = getPromptCV(language, jobDescription, position); // Use CV prompt
   const result = await model.generateContent(prompt);
   const response = result.response;
   const text = response.text();

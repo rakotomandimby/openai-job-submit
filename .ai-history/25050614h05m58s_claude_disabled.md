@@ -11,3 +11,10 @@ I want this app to perform two prompts for the job advertisement: one for the CV
 Tell me the modifications to make to the codebase to achieve this.
 
 
+
+
+
+# This is disabled answer (0k in, 0k out)
+
+Anthropic models are disabled
+

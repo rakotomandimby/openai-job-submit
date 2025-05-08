@@ -22,6 +22,9 @@ export function getAPIKey(modelName:string): string {
 // write e function that gets an AUTH_TOKEM from the environment variable
 
 export function getAuthToken(): string {
-  if (process.env["AUTH_TOKEN"] === undefined) {return "";} 
+  if (process.env["AUTH_TOKEN"] === undefined) {
+    console.log("AUTH_TOKEN is not set");
+    return "";
+  } 
   else {return process.env["AUTH_TOKEN"];}
 }
