@@ -1,10 +1,31 @@
+# Make number of words for cover letter predefined 
+
+The current code lets the user define the number of words for the cover letter.
+But this has no sense to let the user make a free choice.
+
+I want to define a fixed choice of 3 options: 100, 200, 300 words.
+
+Tell me the modifications make to `index.ejs` to implement that.
+
+
+
+
+
+# This is gemini-2.5-pro-preview-05-06 answer (6k in, 1k out)
+
+Okay, I can help you with that. To change the number of words input for the cover letter from a free text field to a predefined set of options (100, 200, 300 words), you need to modify the `views/index.ejs` file.
+
+You will replace the `<input type="number" ...>` for the "Number of words (for Cover Letter)" with a `<select>` element.
+
+Here's the complete `views/index.ejs` file with the necessary modifications:
+
+```html
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
     <title>Job Application Assistant</title>
   </head>
   <body>
@@ -34,7 +55,7 @@
             <div class="card-header">
               Gemini CV Result
             </div>
-            <div class="card-body" id="geminiCVResult">
+            <div class="card-body" id="geminiCVResult"> {/* Removed style="white-space: pre-wrap;" */}
               <%- geminiCVResult %>
             </div>
           </div>
@@ -44,7 +65,7 @@
             <div class="card-header">
               OpenAI CV Result
             </div>
-            <div class="card-body" id="openAICVResult">
+            <div class="card-body" id="openAICVResult"> {/* Removed style="white-space: pre-wrap;" */}
               <%- openAICVResult %>
             </div>
           </div>
@@ -99,38 +120,19 @@
           <textarea id="job" class="form-control" rows="15" name="job" placeholder="Paste the full job description here..."></textarea>
         </div>
         <div class="mb-3">
-          <label class="form-label">Language</label>
-          <div class="border p-2 rounded">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" id="languageen" name="language" value="English" checked>
-              <label class="form-check-label" for="languageen">
-                <span class="fi fi-gb me-2"></span>English
-              </label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" id="languagefr" name="language" value="French">
-              <label class="form-check-label" for="languagefr">
-                <span class="fi fi-fr me-2"></span>French
-              </label>
-            </div>
-          </div>
+          <label for="language" class="form-label">Language</label><br/>
+          <input type="radio" id="languageen" name="language" value="English" checked>
+          <label for="languageen" class="form-label">English</label>
+          <input type="radio" id="languagefr" name="language" value="French">
+          <label for="languagefr" class="form-label">French</label>
         </div>
         <div class="mb-3">
-          <label class="form-label">Number of words (for Cover Letter)</label>
-          <div class="border p-2 rounded">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="words" id="words100" value="100" checked>
-              <label class="form-check-label" for="words100">100</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="words" id="words200" value="200">
-              <label class="form-check-label" for="words200">200</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="words" id="words300" value="300">
-              <label class="form-check-label" for="words300">300</label>
-            </div>
-          </div>
+          <label for="words-select" class="form-label">Number of words (for Cover Letter)</label>
+          <select class="form-select" id="words-select" name="words">
+            <option value="100" selected>100 words</option>
+            <option value="200">200 words</option>
+            <option value="300">300 words</option>
+          </select>
         </div>
         <button type="submit" class="btn btn-primary">Generate</button>
       </form>
@@ -165,4 +167,16 @@
     </script>
   </body>
 </html>
+```
 
+**Key changes:**
+
+1.  The `div` for the number of words input has been changed:
+    *   The `label`'s `for` attribute now points to `words-select`.
+    *   The `input type="number"` has been replaced with a `<select class="form-select" id="words-select" name="words">`.
+    *   Inside the `<select>` tag, three `<option>` elements are added:
+        *   `<option value="100" selected>100 words</option>` (default selection)
+        *   `<option value="200">200 words</option>`
+        *   `<option value="300">300 words</option>`
+
+This change ensures that the user can only select one of the predefined word counts for the cover letter. The `name="words"` attribute remains the same, so your backend code in `index.ts` should continue to receive the selected value correctly.

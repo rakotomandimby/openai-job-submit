@@ -1,10 +1,37 @@
+# Make number of words for cover letter predefined 
+
+The current code lets the user define the number of words for the cover letter.
+But this has no sense to let the user make a free choice.
+
+I want to define a fixed choice of 3 options: 100, 200, 300 words.
+I want 3 radio buttons for that.
+They must be displayed inline, side by side, with a border in order to ease the choice.
+
+Tell me the modifications make to `index.ejs` to implement that, and if there are any modifications to be made to other files, tell me which ones and what to do.
+
+
+
+
+
+# This is gemini-2.5-pro-preview-05-06 answer (7k in, 2k out)
+
+Okay, I can help you with that. This change will primarily affect the `views/index.ejs` file to update the user interface. The backend code should already handle the `words` parameter as a string, which the radio buttons will provide.
+
+Here are the modifications:
+
+### 1. Modify `views/index.ejs`
+
+You need to replace the number input field for "Number of words (for Cover Letter)" with three radio buttons.
+
+Here's the complete updated content for `./views/index.ejs`:
+
+```html
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
     <title>Job Application Assistant</title>
   </head>
   <body>
@@ -34,7 +61,7 @@
             <div class="card-header">
               Gemini CV Result
             </div>
-            <div class="card-body" id="geminiCVResult">
+            <div class="card-body" id="geminiCVResult"> {/* Removed style="white-space: pre-wrap;" */}
               <%- geminiCVResult %>
             </div>
           </div>
@@ -44,7 +71,7 @@
             <div class="card-header">
               OpenAI CV Result
             </div>
-            <div class="card-body" id="openAICVResult">
+            <div class="card-body" id="openAICVResult"> {/* Removed style="white-space: pre-wrap;" */}
               <%- openAICVResult %>
             </div>
           </div>
@@ -99,21 +126,11 @@
           <textarea id="job" class="form-control" rows="15" name="job" placeholder="Paste the full job description here..."></textarea>
         </div>
         <div class="mb-3">
-          <label class="form-label">Language</label>
-          <div class="border p-2 rounded">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" id="languageen" name="language" value="English" checked>
-              <label class="form-check-label" for="languageen">
-                <span class="fi fi-gb me-2"></span>English
-              </label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" id="languagefr" name="language" value="French">
-              <label class="form-check-label" for="languagefr">
-                <span class="fi fi-fr me-2"></span>French
-              </label>
-            </div>
-          </div>
+          <label for="language" class="form-label">Language</label><br/>
+          <input type="radio" id="languageen" name="language" value="English" checked>
+          <label for="languageen" class="form-label">English</label>
+          <input type="radio" id="languagefr" name="language" value="French">
+          <label for="languagefr" class="form-label">French</label>
         </div>
         <div class="mb-3">
           <label class="form-label">Number of words (for Cover Letter)</label>
@@ -165,4 +182,19 @@
     </script>
   </body>
 </html>
+```
 
+**Key changes in `views/index.ejs`:**
+*   The `div` containing the input for `words` (previously `id="words-number"`) has been replaced.
+*   The new structure uses a `div` with Bootstrap classes `border p-2 rounded` to create the visual border and padding around the radio buttons.
+*   Inside this `div`, three `div` elements with class `form-check form-check-inline` are used for each radio button and its label, making them appear side-by-side.
+*   Each radio button has `name="words"` and a unique `id` (`words100`, `words200`, `words300`).
+*   Their `value` attributes are set to "100", "200", and "300" respectively.
+*   The first radio button (100 words) has the `checked` attribute, making it the default selection.
+
+### 2. Other files (e.g., `src/index.ts`, `src/ask-openai.ts`, `src/ask-gemini.ts`, `src/system-instruction.ts`, `src/prompt.ts`)
+
+No changes are required in these files.
+The `req.body.words` in `src/index.ts` will now receive "100", "200", or "300" as a string value from the selected radio button. The existing logic that uses `words` as a string (e.g., in `getSystemInstructionCoverLetter` and `getPromptCoverLetter`) will continue to work correctly. The validation `!words` in `src/index.ts` also remains appropriate.
+
+After applying the changes to `views/index.ejs`, your application will display the word count selection for cover letters as three inline radio buttons with a border.

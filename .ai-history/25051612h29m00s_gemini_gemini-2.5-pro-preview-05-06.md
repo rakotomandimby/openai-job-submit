@@ -1,11 +1,42 @@
+# Langage choice styling
+
+I have set a particular style, with a border for the "number of word" checkbox of the cover letter.
+I want you to align the langage choice with the same style. But I also want you to add a flag image for each language.
+
+Tell me the modification to make to the code in order to have the same styling and have the flag image.
+
+
+
+# This is gemini-2.5-pro-preview-05-06 answer (7k in, 2k out)
+
+Okay, I can help you with that! To achieve the same styling for the language choice as the "number of words" section and to add flag images, you'll need to modify your `./views/index.ejs` file.
+
+Here's how you can update the language selection part in your EJS template:
+
+1.  **Wrap the language options**: Enclose the radio buttons and their labels within a `div` that has the classes `border p-2 rounded`.
+2.  **Use Bootstrap's inline form checks**: For each language option, use `div` with classes `form-check form-check-inline` to align the radio button, flag, and label horizontally.
+3.  **Add image tags for flags**: Insert `<img>` tags next to each language's radio button. You'll need to place the flag images in your `public/images` directory. I'll use `/images/us-flag.png` for English and `/images/fr-flag.png` for French as examples.
+4.  **Adjust labels**: The main "Language" label will be outside the bordered `div`, similar to how "Number of words" is structured.
+
+Here is the complete updated code for `./views/index.ejs`:
+
+```html
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
     <title>Job Application Assistant</title>
+    <style>
+      /* Optional: Adjust flag image alignment if needed, though vertical-align should help */
+      .form-check-inline img {
+        vertical-align: middle; /* Align image with the middle of the text */
+        height: 1.2em; /* Adjust size as needed, relative to font size */
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+      }
+    </style>
   </head>
   <body>
 
@@ -98,23 +129,25 @@
           <label for="job" class="form-label">Job description (will be used for CV and Cover Letter)</label>
           <textarea id="job" class="form-control" rows="15" name="job" placeholder="Paste the full job description here..."></textarea>
         </div>
+
+        <!-- Modified Language Section -->
         <div class="mb-3">
           <label class="form-label">Language</label>
           <div class="border p-2 rounded">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" id="languageen" name="language" value="English" checked>
-              <label class="form-check-label" for="languageen">
-                <span class="fi fi-gb me-2"></span>English
-              </label>
+              <img src="/images/us-flag.png" alt="USA Flag">
+              <label class="form-check-label" for="languageen">English</label>
             </div>
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" id="languagefr" name="language" value="French">
-              <label class="form-check-label" for="languagefr">
-                <span class="fi fi-fr me-2"></span>French
-              </label>
+              <img src="/images/fr-flag.png" alt="French Flag">
+              <label class="form-check-label" for="languagefr">French</label>
             </div>
           </div>
         </div>
+        <!-- End of Modified Language Section -->
+
         <div class="mb-3">
           <label class="form-label">Number of words (for Cover Letter)</label>
           <div class="border p-2 rounded">
@@ -165,4 +198,12 @@
     </script>
   </body>
 </html>
+```
 
+**Important:**
+
+1.  **Create Image Directory**: You need to create an `images` directory inside your `public` folder (i.e., `public/images/`).
+2.  **Add Flag Images**: Place your flag images (e.g., `us-flag.png` for English and `fr-flag.png` for French) into the `public/images/` directory. You can find many free flag icons online.
+3.  **Image Styling**: I've added a small `<style>` block in the `<head>` to provide some basic styling for the flag images (`vertical-align: middle; height: 1.2em; margin-left: 0.25rem; margin-right: 0.25rem;`). You can adjust the `height` and `margin` values as needed, or move this CSS to your main stylesheet if you have one. The `vertical-align: middle;` helps to align the flag nicely with the text.
+
+Your `index.ts` file already includes `app.use(express.static('public'));`, so it will serve files from the `public` directory automatically. No changes are needed in your Node.js/TypeScript backend code for this styling update.

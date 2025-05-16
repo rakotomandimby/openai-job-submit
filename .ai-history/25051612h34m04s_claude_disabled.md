@@ -19,3 +19,10 @@ Then
 
 Tell me the modification to make to the code in order to have the same styling and have the flag image.
 
+
+
+
+# This is disabled answer (0k in, 0k out)
+
+Anthropic models are disabled
+
