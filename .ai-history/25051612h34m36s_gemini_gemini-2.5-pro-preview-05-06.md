@@ -1,3 +1,39 @@
+# Langage choice styling
+
+I have set a particular style, with a border for the "number of word" checkbox of the cover letter.
+I want you to align the langage choice with the same style. 
+
+But I also want you to add a flag image for each language using https://github.com/lipis/flag-icons.
+Its usage can be made by CdN:
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"
+/>
+```
+
+Then
+```html
+<span class="fi fi-fr"></span>
+```
+
+Tell me the modification to make to the code in order to have the same styling and have the flag image.
+
+
+
+
+# This is gemini-2.5-pro-preview-05-06 answer (7k in, 2k out)
+
+Okay, I can help you with that! We'll need to modify your `./views/index.ejs` file to include the flag icons CSS and update the HTML structure for the language selection.
+
+Here's how you can do it:
+
+1.  **Add the Flag Icons CSS link** to the `<head>` section of your EJS file.
+2.  **Restructure the language selection HTML** to mirror the styling of the "Number of words" section and include the flag icons.
+
+Here is the updated content for `./views/index.ejs`:
+
+```html
 <!DOCTYPE html>
 <html>
   <head>
@@ -165,4 +201,43 @@
     </script>
   </body>
 </html>
+```
 
+**Key changes made:**
+
+*   **Added Flag Icons CSS:**
+    ```html
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"
+    />
+    ```
+    This line is added in the `<head>` section.
+*   **Updated Language Selection HTML:**
+    ```html
+    <div class="mb-3">
+      <label class="form-label">Language</label> <!-- General label for the section -->
+      <div class="border p-2 rounded"> <!-- Applied the same styling as "Number of words" -->
+        <div class="form-check form-check-inline"> <!-- Bootstrap class for inline radio buttons -->
+          <input class="form-check-input" type="radio" id="languageen" name="language" value="English" checked>
+          <label class="form-check-label" for="languageen">
+            <span class="fi fi-gb me-2"></span>English <!-- UK flag for English, added me-2 for margin -->
+          </label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" id="languagefr" name="language" value="French">
+          <label class="form-check-label" for="languagefr">
+            <span class="fi fi-fr me-2"></span>French <!-- French flag, added me-2 for margin -->
+          </label>
+        </div>
+      </div>
+    </div>
+    ```
+    *   The main `div` for language selection now has a general label "Language".
+    *   A nested `div` with classes `border p-2 rounded` is used to create the border and padding.
+    *   Each language option (radio button and label) is wrapped in a `div` with classes `form-check form-check-inline` for proper alignment and styling.
+    *   The `<span>` tags with `fi fi-gb` (for Great Britain/English) and `fi fi-fr` (for French) are added before the language names. I've used `fi-gb` for English; you can use `fi-us` if you prefer the US flag.
+    *   `me-2` (margin-end 2) is added to the flag `<span>` to give a little space between the flag and the text.
+    *   Labels now use `class="form-check-label"`.
+
+With these changes, your language selection should now have a similar bordered style to the "Number of words" section and display the respective flags.

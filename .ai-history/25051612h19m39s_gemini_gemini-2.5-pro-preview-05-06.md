@@ -1,57 +1,29 @@
-# The CV redering has too much interline spacing
+# Make number of words for cover letter predefined 
 
-The cover letter rendering in the application is Good.
+The current code lets the user define the number of words for the cover letter.
+But this has no sense to let the user make a free choice.
 
-But the CV rendering has too much interline spacing. 
-After checking the HTML fragment returned by the API, I found that the code is good, without extra new lines.
+I want to define a fixed choice of 3 options: 100, 200, 300 words.
+I want 3 radio buttons for that.
+They must be displayed inline, side by side, with a border in order to ease the choice.
 
-I suspect that the problem is somewhere in the code where the code applies a non visible blank line for each line in the HTML fragment.
-Analyzing the code and tell me if I am in the right direction.
-
-
+Tell me the modifications make to `index.ejs` to implement that, and if there are any modifications to be made to other files, tell me which ones and what to do.
 
 
-# This is gemini-2.5-pro-preview-05-06 answer (6k in, 2k out)
 
-You are on the right track with your suspicion. The issue of excessive interline spacing in the CV rendering, despite the HTML fragment from the API being well-formed, likely stems from how this HTML is displayed on the page.
 
-Let's look at the relevant parts:
 
-1.  **CV Content Generation**:
-    *   In `ask-openai.ts` (`getOpenAICVResult`) and `ask-gemini.ts` (`getGeminiCVResult`), the results from the AI are returned directly. Crucially, the `nl2br` function is **not** applied to the CV results, which is correct because the AI is instructed to return an HTML fragment for the CV.
-    *   The system instruction for CVs (`getSystemInstructionCV`) asks for an "HTML fragment" and explicitly forbids `<br>` tags, meaning line breaks should be handled by block-level HTML elements like `<p>`, `<div>`, etc.
+# This is gemini-2.5-pro-preview-05-06 answer (7k in, 2k out)
 
-2.  **Rendering in `index.ejs`**:
-    The CV results are rendered within `div` elements like this:
-    ```html
-    <div class="card-body" id="geminiCVResult" style="white-space: pre-wrap;">
-      <%- geminiCVResult %>
-    </div>
-    ```
-    And similarly for `openAICVResult`.
+Okay, I can help you with that. This change will primarily affect the `views/index.ejs` file to update the user interface. The backend code should already handle the `words` parameter as a string, which the radio buttons will provide.
 
-The `style="white-space: pre-wrap;"` CSS property is the key here. This style does two things:
-*   It preserves sequences of white space (like multiple spaces).
-*   It makes newline characters (`\n`) in the source string cause line breaks in the rendered output.
+Here are the modifications:
 
-When the AI generates an HTML fragment for the CV, it might format the HTML string with newlines for readability. For example:
+### 1. Modify `views/index.ejs`
 
-```html
-<div>
-  <p>This is the first paragraph of the CV.</p>
-  <p>This is the second paragraph.</p>
-</div>
-```
+You need to replace the number input field for "Number of words (for Cover Letter)" with three radio buttons.
 
-If the string variable `geminiCVResult` contains this HTML, the `\n` characters (newlines) between `<div>` and `<p>`, or after `</p>`, will be treated as actual line breaks by `white-space: pre-wrap;`. This is *in addition* to the line breaks naturally caused by block-level elements like `<p>` and `<div>`. This combination leads to the "double spacing" or excessive interline spacing you're observing.
-
-The cover letter, on the other hand, is generated as plain text. The `nl2br` function is then used to convert newline characters in this plain text into HTML `<br>` tags. In this context, `white-space: pre-wrap;` helps ensure that these `<br>` tags work as expected and might also preserve any intentional spacing (like multiple spaces for indentation, though less common in cover letters). Since you mentioned the cover letter rendering is good, this setup works for it.
-
-**Solution:**
-
-For the CV rendering, since the content is already HTML, you should let standard HTML whitespace handling apply. This means removing `style="white-space: pre-wrap;"` from the `div` elements that display the CV content. The HTML tags themselves (`<p>`, `<div>`, list items, etc.) will correctly control the layout and spacing.
-
-Here's the updated `index.ejs` file with the change:
+Here's the complete updated content for `./views/index.ejs`:
 
 ```html
 <!DOCTYPE html>
@@ -161,8 +133,21 @@ Here's the updated `index.ejs` file with the change:
           <label for="languagefr" class="form-label">French</label>
         </div>
         <div class="mb-3">
-          <label for="words-number" class="form-label">Number of words (for Cover Letter)</label>
-          <input type="number" class="form-control" id="words-number" placeholder="Enter number of words for cover letter" name="words" value="100">
+          <label class="form-label">Number of words (for Cover Letter)</label>
+          <div class="border p-2 rounded">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="words" id="words100" value="100" checked>
+              <label class="form-check-label" for="words100">100</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="words" id="words200" value="200">
+              <label class="form-check-label" for="words200">200</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="words" id="words300" value="300">
+              <label class="form-check-label" for="words300">300</label>
+            </div>
+          </div>
         </div>
         <button type="submit" class="btn btn-primary">Generate</button>
       </form>
@@ -199,4 +184,17 @@ Here's the updated `index.ejs` file with the change:
 </html>
 ```
 
-By removing `style="white-space: pre-wrap;"` from the `div`s with `id="geminiCVResult"` and `id="openAICVResult"`, the browser will now render the HTML content according to standard HTML rules: multiple whitespace characters (including newlines) will be collapsed into a single space, and only the HTML tags themselves will dictate the structure and line breaks. This should resolve the excessive interline spacing issue for the CVs.
+**Key changes in `views/index.ejs`:**
+*   The `div` containing the input for `words` (previously `id="words-number"`) has been replaced.
+*   The new structure uses a `div` with Bootstrap classes `border p-2 rounded` to create the visual border and padding around the radio buttons.
+*   Inside this `div`, three `div` elements with class `form-check form-check-inline` are used for each radio button and its label, making them appear side-by-side.
+*   Each radio button has `name="words"` and a unique `id` (`words100`, `words200`, `words300`).
+*   Their `value` attributes are set to "100", "200", and "300" respectively.
+*   The first radio button (100 words) has the `checked` attribute, making it the default selection.
+
+### 2. Other files (e.g., `src/index.ts`, `src/ask-openai.ts`, `src/ask-gemini.ts`, `src/system-instruction.ts`, `src/prompt.ts`)
+
+No changes are required in these files.
+The `req.body.words` in `src/index.ts` will now receive "100", "200", or "300" as a string value from the selected radio button. The existing logic that uses `words` as a string (e.g., in `getSystemInstructionCoverLetter` and `getPromptCoverLetter`) will continue to work correctly. The validation `!words` in `src/index.ts` also remains appropriate.
+
+After applying the changes to `views/index.ejs`, your application will display the word count selection for cover letters as three inline radio buttons with a border.
