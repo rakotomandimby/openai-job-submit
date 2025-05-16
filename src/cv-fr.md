@@ -1,3 +1,12 @@
+# A propos du candidat
+
+- **Nom**: Mihamina RAKOTOMANDIMBY
+- **Email**: mihamina@rktmb.org
+- **Téléphone**: +261 32 99 236 88
+- **Localisation**: Antananarivo, Madagascar
+- **LinkedIn**: [Mihamina RAKOTOMANDIMBY](https://www.linkedin.com/in/mihaminarakotomandimby/)
+- **Disponibilité**: 2 semaines
+
 # Compétences clés
 
 - Direction des développeurs Web utilisant PHP et Typescript dans l'adoption des "best practices"
