@@ -30,3 +30,14 @@ export function getAuthToken(): string | null {
   return token;
 }
 
+// write a function that removes Markdown code blocks from a string
+// - remove the triple backticks and language name for beginning code block
+// - remove the triple backticks for ending code block
+
+export function removeMarkdownCodeBlocks(text: string): string {
+  // Remove the opening code block with language name
+  text = text.replace(/```[a-zA-Z]*\n/g, '');
+  // Remove the closing code block
+  text = text.replace(/```/g, '');
+  return text;
+}
