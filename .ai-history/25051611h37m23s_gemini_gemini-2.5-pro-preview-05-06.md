@@ -1,3 +1,28 @@
+# "Missing required fields for CV" and "Missing required fields for Cover Letter" when "Attempt to use specific information about the company" is unchecked
+
+When the user unchecks the "Attempt to use specific information about the company" checkbox, 
+then submit the form, the application displays a message saying "Missing required fields for CV" 
+and "Missing required fields for Cover Letter".
+
+This is not the expected behavior.
+
+The expected behavior is that the application should process the form and generate the CV and Cover Letter without paying attention to the target enterprise.
+
+It must only care about the enterprise name when the user checks the "Attempt to use specific information about the company" checkbox.
+
+Tell me the modifications to make to the code in order to achieve that.
+
+
+
+# This is gemini-2.5-pro-preview-05-06 answer (6k in, 2k out)
+
+Okay, I understand the issue. The problem arises because when the "Attempt to use specific information about the company" checkbox is unchecked, the `company` input field is disabled on the client-side. Disabled input fields are not submitted with the form, meaning `req.body.company` becomes `undefined` on the server. The existing validation logic then incorrectly flags this as a missing required field.
+
+To fix this, we need to adjust the server-side validation in `src/index.ts` to only require the `company` field if `searchCompanyInfo` is true. If `searchCompanyInfo` is false, the `company` field can be absent or 'Unknown', and the application should proceed.
+
+Here's the modified code for `./src/index.ts`:
+
+```typescript
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
@@ -154,4 +179,24 @@ app.listen(port, () => {
     console.warn("------------------------------------");
   }
 });
+```
 
+**Key changes in `./src/index.ts`:**
+
+1.  **Separated Company Field Handling**:
+    *   `const companyFromRequest = req.body.company;` retrieves the company name. This might be `undefined` if the input field was disabled.
+    *   `const searchCompanyInfo = req.body.searchCompany === 'true';` correctly determines if company-specific information should be used.
+
+2.  **Revised Validation Logic**:
+    *   The first validation block now checks for fields that are *always* required: `job`, `language`, `position`, `words`, and `submittedToken`.
+    *   A new, conditional validation block checks for `companyFromRequest` *only if* `searchCompanyInfo` is `true`.
+
+3.  **Determining `companyForProcessing`**:
+    *   A variable `companyForProcessing` is introduced.
+    *   If `searchCompanyInfo` is `true`, `companyForProcessing` is set to `companyFromRequest` (which, at this point, has been validated to exist).
+    *   If `searchCompanyInfo` is `false`, `companyForProcessing` is explicitly set to `'Unknown'`. This ensures that even if `companyFromRequest` was `undefined` (due to the disabled input field), the downstream functions receive a consistent value indicating that company-specific details should not be sought.
+
+4.  **Passing Parameters to AI Services**:
+    *   `companyForProcessing` and `searchCompanyInfo` are passed to `getGeminiCoverLetterResult` and `getOpenAICoverLetterResult`. The CV generation functions do not need these specific parameters.
+
+These changes ensure that the `company` field is only considered mandatory when the user intends to use company-specific information. Otherwise, the application defaults to a generic approach for the cover letter, as intended. The client-side behavior of disabling the input when the checkbox is unchecked is compatible with this server-side logic.

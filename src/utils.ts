@@ -9,22 +9,24 @@ export function nl2br(str: string): string {
 
 export function getAPIKey(modelName:string): string {
   if (modelName === "openai") {
-    if (process.env["OPENAI_API_KEY"] === undefined) {return "";} 
+    if (process.env["OPENAI_API_KEY"] === undefined) {return "";}
     else {return process.env["OPENAI_API_KEY"];}
   }
   else if (modelName === "gemini") {
-    if (process.env["GEMINI_API_KEY"] === undefined) {return "";} 
+    if (process.env["GEMINI_API_KEY"] === undefined) {return "";}
     else {return process.env["GEMINI_API_KEY"];}
   }
   else {return "";}
 }
 
-// write e function that gets an AUTH_TOKEM from the environment variable
-
-export function getAuthToken(): string {
-  if (process.env["AUTH_TOKEN"] === undefined) {
-    console.log("AUTH_TOKEN is not set");
-    return "";
-  } 
-  else {return process.env["AUTH_TOKEN"];}
+// Modified getAuthToken to return null if not set or empty
+export function getAuthToken(): string | null {
+  const token = process.env["AUTH_TOKEN"];
+  if (token === undefined || token === "") {
+    // Log a warning on the server side for critical missing configuration
+    console.warn("CRITICAL: AUTH_TOKEN environment variable is not set or is empty. Application security is compromised.");
+    return null;
+  }
+  return token;
 }
+
