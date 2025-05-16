@@ -77,7 +77,18 @@
       </div>
 
       <h2 class="mt-4">Generate Documents</h2>
+
+      <%# Display form-specific errors, including CSRF errors %>
+      <% if (typeof formError !== 'undefined' && formError) { %>
+        <div class="alert alert-danger mt-3" role="alert">
+          <%- formError %>
+        </div>
+      <% } %>
+
       <form class="mt-4" action="/" method="POST">
+        <%# CSRF Token %>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        
         <div class="mb-3">
           <label for="token" class="form-label">Token</label>
           <input type="text" class="form-control" id="token" placeholder="Enter token" name="token" >

@@ -1,7 +1,8 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
-import { Request, Response } from 'express';
+import cookieParser from 'cookie-parser'; // Added
+import csrf from 'csurf'; // Added
 import { getOpenAICoverLetterResult, getOpenAICVResult } from './ask-openai';
 import { getGeminiCoverLetterResult, getGeminiCVResult } from './ask-gemini';
 import { getAuthToken } from './utils';
@@ -26,104 +27,100 @@ if (!configuredAuthToken) {
 // --- End Environment Variable Checks ---
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser()); // Use cookie-parser middleware
+const csrfProtection = csrf({ cookie: true }); // Setup csurf middleware
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));
 app.use(express.static('public'));
 
-app.get('/', (req: Request, res: Response) => {
+// Define initial options for rendering the page, including a spot for form errors
+const initialRenderOptions = {
+  envErrors: envErrors,
+  geminiCVResult: "Waiting for your job description for CV generation",
+  openAICVResult: "Waiting for your job description for CV generation",
+  geminiCoverLetterResult: "Waiting for your question for Cover Letter",
+  openAICoverLetterResult: "Waiting for your question for Cover Letter",
+  formError: null as string | null, // For displaying form-specific errors
+};
+
+app.get('/', csrfProtection, (req: Request, res: Response) => {
   res.render('index', {
-    envErrors: envErrors,
-    geminiCVResult: "Waiting for your job description for CV generation",
-    openAICVResult: "Waiting for your job description for CV generation",
-    geminiCoverLetterResult: "Waiting for your question for Cover Letter",
-    openAICoverLetterResult: "Waiting for your question for Cover Letter"
+    ...initialRenderOptions,
+    csrfToken: (req as any).csrfToken() // Pass CSRF token to the template
   });
 });
 
-app.post('/', async (req: Request, res: Response) => {
+app.post('/', csrfProtection, async (req: Request, res: Response) => {
   const { job, language, position, words, token: submittedToken } = req.body;
-  // req.body.company might be undefined if the input field was disabled client-side
   const companyFromRequest = req.body.company;
-  // If searchCompany checkbox is unchecked, req.body.searchCompany will be undefined.
-  // So, (undefined === 'true') is false.
-  // If checked, req.body.searchCompany will be 'true'.
-  // So, ('true' === 'true') is true.
   const searchCompanyInfo = req.body.searchCompany === 'true';
 
-  const baseRenderOptions = {
+  // Base options for re-rendering the form in case of errors in POST
+  const baseRenderOptionsForPost = {
     envErrors: envErrors,
     geminiCVResult: "An error occurred or input was missing.",
     openAICVResult: "An error occurred or input was missing.",
     geminiCoverLetterResult: "An error occurred or input was missing.",
-    openAICoverLetterResult: "An error occurred or input was missing."
+    openAICoverLetterResult: "An error occurred or input was missing.",
+    csrfToken: (req as any).csrfToken(), // Crucial for re-rendering the form
+    formError: null as string | null,
   };
 
-  // Validate fields that are always required
   if (!job || !language || !position || !words || submittedToken === undefined) {
     return res.render('index', {
-      ...baseRenderOptions,
-      geminiCVResult: "Missing required fields: job, language, position, words, or token.",
-      openAICVResult: "Missing required fields: job, language, position, words, or token.",
-      geminiCoverLetterResult: "Missing required fields: job, language, position, words, or token.",
-      openAICoverLetterResult: "Missing required fields: job, language, position, words, or token."
+      ...baseRenderOptionsForPost,
+      formError: "Missing required fields: job, language, position, words, or token.",
+      geminiCVResult: "Missing required fields.",
+      openAICVResult: "Missing required fields.",
+      geminiCoverLetterResult: "Missing required fields.",
+      openAICoverLetterResult: "Missing required fields."
     });
   }
 
-  // Conditionally validate company field: required only if searchCompanyInfo is true
   if (searchCompanyInfo && !companyFromRequest) {
-    // If searchCompanyInfo is true, company name is required.
-    // The client-side script enables the input, so it should be submitted.
-    // If it's still not submitted or empty, it's an error.
     return res.render('index', {
-      ...baseRenderOptions,
-      geminiCVResult: "Company name is required when 'Attempt to use specific information' is checked.",
-      openAICVResult: "Company name is required when 'Attempt to use specific information' is checked.",
-      geminiCoverLetterResult: "Company name is required when 'Attempt to use specific information' is checked.",
-      openAICoverLetterResult: "Company name is required when 'Attempt to use specific information' is checked."
+      ...baseRenderOptionsForPost,
+      formError: "Company name is required when 'Attempt to use specific information' is checked.",
+      geminiCVResult: "Company name required.",
+      openAICVResult: "Company name required.",
+      geminiCoverLetterResult: "Company name required.",
+      openAICoverLetterResult: "Company name required."
     });
   }
 
-  // Determine the company name to be used for processing
   let companyForProcessing: string;
   if (searchCompanyInfo) {
-    // If we are searching, companyFromRequest must be valid (checked above)
     companyForProcessing = companyFromRequest!;
   } else {
-    // If not searching for company info, default to 'Unknown'.
-    // This handles cases where companyFromRequest is undefined (due to disabled input)
-    // or if the user somehow submitted an empty string.
-    // The downstream functions (like getSystemInstructionCoverLetter)
-    // expect 'Unknown' or an actual company name.
     companyForProcessing = 'Unknown';
   }
 
-  // Check if AUTH_TOKEN is configured on the server
   if (!configuredAuthToken) {
     return res.render('index', {
-      ...baseRenderOptions,
-      geminiCVResult: "Security Alert: Application AUTH_TOKEN is not configured. Submission rejected.",
-      openAICVResult: "Security Alert: Application AUTH_TOKEN is not configured. Submission rejected.",
-      geminiCoverLetterResult: "Security Alert: Application AUTH_TOKEN is not configured. Submission rejected.",
-      openAICoverLetterResult: "Security Alert: Application AUTH_TOKEN is not configured. Submission rejected."
+      ...baseRenderOptionsForPost,
+      formError: "Security Alert: Application AUTH_TOKEN is not configured. Submission rejected.",
+      geminiCVResult: "AUTH_TOKEN not configured.",
+      openAICVResult: "AUTH_TOKEN not configured.",
+      geminiCoverLetterResult: "AUTH_TOKEN not configured.",
+      openAICoverLetterResult: "AUTH_TOKEN not configured."
     });
   }
 
   if (submittedToken !== configuredAuthToken) {
     return res.render('index', {
-      ...baseRenderOptions,
-      geminiCVResult: "Invalid token",
-      openAICVResult: "Invalid token",
-      geminiCoverLetterResult: "Invalid token",
-      openAICoverLetterResult: "Invalid token"
+      ...baseRenderOptionsForPost,
+      formError: "Invalid token.",
+      geminiCVResult: "Invalid token.",
+      openAICVResult: "Invalid token.",
+      geminiCoverLetterResult: "Invalid token.",
+      openAICoverLetterResult: "Invalid token."
     });
   }
 
   try {
-    // CV generation does not directly use company name or searchCompanyInfo flag
     const geminiCV = await getGeminiCVResult(job, position, language);
     const openAICV = await getOpenAICVResult(job, position, language);
-
-    // Cover letter generation uses companyForProcessing and searchCompanyInfo
     const geminiCoverLetter = await getGeminiCoverLetterResult(companyForProcessing, position, job, language, words, searchCompanyInfo);
     const openAICoverLetter = await getOpenAICoverLetterResult(companyForProcessing, position, job, language, words, searchCompanyInfo);
 
@@ -132,17 +129,36 @@ app.post('/', async (req: Request, res: Response) => {
       geminiCVResult: geminiCV,
       openAICVResult: openAICV,
       geminiCoverLetterResult: geminiCoverLetter,
-      openAICoverLetterResult: openAICoverLetter
+      openAICoverLetterResult: openAICoverLetter,
+      csrfToken: (req as any).csrfToken(), // Pass token for the rendered page (though form is usually gone on success)
+      formError: null,
     });
   } catch (error) {
     console.error("Error processing request:", error);
     res.status(500).render('index', {
-      ...baseRenderOptions,
-      geminiCVResult: "An error occurred during CV generation",
-      openAICVResult: "An error occurred during CV generation",
-      geminiCoverLetterResult: "An error occurred during Cover Letter generation",
-      openAICoverLetterResult: "An error occurred during Cover Letter generation"
+      ...baseRenderOptionsForPost, // This includes csrfToken
+      formError: "An unexpected error occurred while processing your request.",
+      geminiCVResult: "Error during generation.",
+      openAICVResult: "Error during generation.",
+      geminiCoverLetterResult: "Error during generation.",
+      openAICoverLetterResult: "Error during generation."
     });
+  }
+});
+
+// CSRF error handler middleware
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  if (err.code === 'EBADCSRFTOKEN') {
+    console.warn('CSRF Token Validation Failed for request to:', req.path);
+    // Render the page again with an error message and a new CSRF token
+    res.status(403).render('index', {
+      ...initialRenderOptions, // Use initial state for results display
+      csrfToken: (req as any).csrfToken ? (req as any).csrfToken() : '', // Attempt to get a new token
+      formError: 'Invalid form submission token. Please refresh the page and try again. Ensure cookies are enabled in your browser.'
+    });
+  } else {
+    // For other errors, pass them to the default Express error handler or other error handlers
+    next(err);
   }
 });
 

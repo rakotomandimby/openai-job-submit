@@ -4,3 +4,10 @@ I want to add CSRF protection to the form. This will prevent CSRF attacks by ens
 Tell me the modifications to make to the code to add CSRF protection to the form.
 
 
+
+
+
+# This is disabled answer (0k in, 0k out)
+
+Anthropic models are disabled
+
